@@ -6,15 +6,19 @@ public protocol CleanupPolicy {
     func itemsToRemove(from items: Set<CacheItem>) -> Set<CacheItem>
 }
 
-struct MaxSizeCleanupPolicy: CleanupPolicy {
+public struct CleanupPolicySize {
+    public static let standard: Int64 = 50 * 1024 * 1024 // 50 MB
+}
+
+public struct MaxSizeCleanupPolicy: CleanupPolicy {
     let maxSize: Int64
     
     // 50MB
-    init(size: Int64 = 50 * 1024 * 1024) {
+    public init(size: Int64 = CleanupPolicySize.standard) {
         maxSize = size
     }
     
-    func itemsToRemove(from items: Set<CacheItem>) -> Set<CacheItem> {
+    public func itemsToRemove(from items: Set<CacheItem>) -> Set<CacheItem> {
         var itemsToRemove = Set<CacheItem>()
         var cumulativeSize = 0
         let sorted = items.sorted(by: { $0.age < $1.age })
