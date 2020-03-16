@@ -33,9 +33,12 @@ public struct CachedSession {
             }
         }
     }
+    
+    public func cleanup() throws {
+        let cache = Cache(storage: OnDiskStorage())
+    }
 
     public func cleanup(using policy: CleanupPolicy) throws {
-        let cache = Cache(storage: OnDiskStorage())
         try cache.cleanup(policy: policy)
     }
 }

@@ -48,17 +48,29 @@ public struct Cache {
         return try decoder.decode(B.self, from: cacheItem.response)
     }
     
+    func cleanup() throws {
+        let cached = try loadCached()
+        let keys = cached.map({ $0.id })
+        for key in keys {
+            try storage.remove(key)
+        }
+    }
+    
     func cleanup(policy: CleanupPolicy) throws {
+        let cached = try loadCached()
+        let items = policy.itemsToRemove(from: Set(cached))
+        let keys = items.map({ $0.id })
+        for key in keys {
+            try storage.remove(key)
+        }
+    }
+    
+    private func loadCached() throws -> [CacheItem] {
         let stored = try storage.loadCurrentData()
-        
         let cached: [CacheItem] = try stored.compactMap {
             try JSONDecoder().decode(CacheItem.self, from: $0)
         }
-
-        let items = policy.itemsToRemove(from: Set(cached))
-        for key in items.map({ $0.id }) {
-            try storage.remove(key)
-        }
+        return cached
     }
 }
 
