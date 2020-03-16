@@ -1,6 +1,6 @@
 # SimpleCachedNetworking
 
-In addition to SimpleNetworking, SimpleCachedNetworking helps you to save requested resources.  
+In addition to SimpleNetworking, SimpleCachedNetworking helps you to cache loaded resources.  
 
 ## Usage
 Just load your resource using URLSession  `cached` instance:
@@ -21,18 +21,18 @@ URLSession.cached.load(FooBar.self, with: request) { result in
 }
 ```
 
-To clean-up cache just call
+To clean-up cache just
 
 ```swift
 try URLSession.cached.cleanup()
 ```
 
-or you can use a cleanup policy:
+or you can use a policy instead:
 
 ```swift
 let size = 50 * 1024 * 1024 // 50 MB
 let policy = MaxSizeCleanupPolicy(size: size)
-URLSession.cached.cleanup(using: policy)
+try URLSession.cached.cleanup(using: policy)
 ```
 
 
