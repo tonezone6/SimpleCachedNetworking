@@ -1,0 +1,16 @@
+{
+  "object": {
+    "pins": [
+      {
+        "package": "SimpleNetworking",
+        "repositoryURL": "https://github.com/tonezone6/SimpleNetworking.git",
+        "state": {
+          "branch": "master",
+          "revision": "32683640603198b2acbaa19cd8d8995dd13086aa",
+          "version": null
+        }
+      }
+    ]
+  },
+  "version": 1
+}
