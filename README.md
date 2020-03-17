@@ -30,8 +30,7 @@ try URLSession.cached.cleanup()
 or use use `MaxSizeCleanupPolicy` policy:
 
 ```swift
-let size = 50 * 1024 * 1024 // 50 MB
-let policy = MaxSizeCleanupPolicy(size: size)
+let policy = MaxSizeCleanupPolicy()
 try URLSession.cached.cleanup(using: policy)
 ```
 
