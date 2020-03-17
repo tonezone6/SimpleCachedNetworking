@@ -14,9 +14,9 @@ var request: URLRequest {
 URLSession.cached.load(FooBar.self, with: request) { result in
     switch result {
     case .failure(let error):
-        // handle error...
+        // handle error
     case .success(let fooBar):
-        // do something... 
+        // ... 
     }
 }
 ```
