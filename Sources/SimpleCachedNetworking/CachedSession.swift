@@ -5,9 +5,11 @@ import SimpleNetworking
 
 public struct CachedSession {
     private var cache: Cache
+    private var session: URLSessionProtocol
     
-    public init(cache: Cache) {
+    public init(cache: Cache, session: URLSessionProtocol = URLSession.shared) {
         self.cache = cache
+        self.session = session
     }
     
     public func load<T: Codable>(_ type: T.Type,
@@ -19,17 +21,13 @@ public struct CachedSession {
             return completion(.success(cached))
         }
         
-        URLSession.shared.load(T.self, with: request) { result in
+        session.load(T.self, with: request) { result in
             switch result {
             case .failure(let error):
                 completion(.failure(error))
             case .success(let value):
-                do {
-                    try self.cache.save(value, for: request)
-                    completion(.success(value))
-                } catch(let error) {
-                    completion(.failure(error))
-                }
+                try? self.cache.save(value, for: request)
+                completion(.success(value))
             }
         }
     }

@@ -2,22 +2,21 @@
 
 import Foundation
 
-protocol CacheProtocol {
+public protocol CacheProtocol {
     func save(_ data: Data?, for key: String) throws
     func loadData(with key: String) throws -> Data
     func loadCurrentData() throws -> [Data]
     func remove(_ key: String) throws
 }
 
-extension URLRequest {
-    var cacheKey: String? {
-        guard let data = url?.absoluteString.data(using: .utf8) else { return nil }
-        return "simpleCache" + "_" + data.sha1
+public enum CacheError: LocalizedError {
+    case invalidKey
+    case invalidMethod
+    case dataUnavailable
+    
+    public var errorDescription: String? {
+        return "\(self)"
     }
-}
-
-enum CacheError: Error {
-    case cannotFindKey
 }
 
 public struct Cache {
@@ -28,30 +27,33 @@ public struct Cache {
     }
     
     func save<A: Encodable>(_ value: A, for request: URLRequest) throws {
-        guard request.httpMethod == "GET", let key = request.cacheKey else {
-            return
+        guard request.httpMethod == "GET" else {
+            throw CacheError.invalidMethod
         }
         let encoder = JSONEncoder()
-        let responseData = try encoder.encode(value)
-        let cacheItem = CacheItem(id: key, response: responseData)
-        let data = try encoder.encode(cacheItem)
-        try storage.save(data, for: key)
+        
+        let data = try encoder.encode(value)
+        let key = try request.createCacheKey()
+        let item = CacheItem(id: key, response: data)
+       
+        let cacheItemData = try encoder.encode(item)
+        try storage.save(cacheItemData, for: key)
     }
     
     func load<B: Decodable>(_ type: B.Type, for request: URLRequest) throws -> B {
-        guard let key = request.cacheKey else {
-            throw CacheError.cannotFindKey
-        }
         let decoder = JSONDecoder()
+        
+        let key = try request.createCacheKey()
         let cacheData = try storage.loadData(with: key)
-        let cacheItem = try decoder.decode(CacheItem.self, from: cacheData)
-        return try decoder.decode(B.self, from: cacheItem.response)
+        let item = try decoder.decode(CacheItem.self, from: cacheData)
+        let resource = try decoder.decode(B.self, from: item.response)
+        return resource
     }
     
     func cleanup() throws {
         let cached = try loadCached()
-        let keys = cached.map({ $0.id })
-        for key in keys {
+        let cacheKeys = cached.map({ $0.id })
+        for key in cacheKeys {
             try storage.remove(key)
         }
     }
@@ -59,8 +61,8 @@ public struct Cache {
     func cleanup(policy: CleanupPolicy) throws {
         let cached = try loadCached()
         let items = policy.itemsToRemove(from: Set(cached))
-        let keys = items.map({ $0.id })
-        for key in keys {
+        let cacheKeys = items.map({ $0.id })
+        for key in cacheKeys {
             try storage.remove(key)
         }
     }

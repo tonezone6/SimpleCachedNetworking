@@ -11,12 +11,7 @@ public struct CleanupPolicySize {
 }
 
 public struct MaxSizeCleanupPolicy: CleanupPolicy {
-    let maxSize: Int64
-    
-    // 50MB
-    public init(size: Int64 = CleanupPolicySize.standard) {
-        maxSize = size
-    }
+    let size: Int64
     
     public func itemsToRemove(from items: Set<CacheItem>) -> Set<CacheItem> {
         var itemsToRemove = Set<CacheItem>()
@@ -24,10 +19,11 @@ public struct MaxSizeCleanupPolicy: CleanupPolicy {
         let sorted = items.sorted(by: { $0.age < $1.age })
         for item in sorted {
             cumulativeSize += item.size
-            if cumulativeSize > maxSize {
+            if cumulativeSize > size {
                 itemsToRemove.insert(item)
             }
         }
+        print("MaxSizeCleanupPolicy items to remove", itemsToRemove.count)
         return itemsToRemove
     }
 }
