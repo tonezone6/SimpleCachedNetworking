@@ -100,7 +100,7 @@ final class CachedSessionTests: XCTestCase {
         XCTAssertTrue(storage.dataDictionary.keys.isEmpty)
     }
     
-    func testSessionCleanupUsingPolicyIgnoringCache() throws {
+    func testSessionCleanupUsingPolicyNoItemsToRemove() throws {
         // given
         session = URLSessionMock(data: testData)
         cachedSession = CachedSession(cache: cache, session: session)
