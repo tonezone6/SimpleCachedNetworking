@@ -4,10 +4,16 @@ import XCTest
 final class RequestCacheKeyTests: XCTestCase {
    
     func testRequestCacheKeyValid() throws {
+        // given
         let url = URL(fileURLWithPath: "/path")
+        
+        // when
         let request = URLRequest(url: url)
-        let prefixedDigest = "simpleCache_73e69922b0bfea103781b52d1b6a2e3b09cd9f8f"
-        XCTAssertEqual(try request.createCacheKey(), prefixedDigest)
+        
+        // then
+        let prefix = "simpleCache" + "_"
+        let digest = "73e69922b0bfea103781b52d1b6a2e3b09cd9f8f"
+        XCTAssertEqual(try request.createCacheKey(), prefix + digest)
     }
     
     func testRequestCacheKeyInvalid() throws {
