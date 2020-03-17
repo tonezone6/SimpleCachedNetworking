@@ -3,14 +3,19 @@ import XCTest
 
 final class CacheErrorTests: XCTestCase {
     
-    func testCacherErrorInvalidKeyDescription() {
+    func testCacheErrorInvalidKeyDescription() {
         let error = CacheError.invalidKey
         XCTAssertEqual(error.localizedDescription, "invalidKey")
     }
     
-    func testCacherErrorInvalidMethodDescription() {
+    func testCacheErrorInvalidMethodDescription() {
         let error = CacheError.invalidMethod
         XCTAssertEqual(error.localizedDescription, "invalidMethod")
+    }
+    
+    func testCacheErrorDataUnavailableDescription() {
+        let error = CacheError.dataUnavailable
+        XCTAssertEqual(error.localizedDescription, "dataUnavailable")
     }
 }
 

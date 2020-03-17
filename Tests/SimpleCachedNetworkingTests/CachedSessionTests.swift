@@ -100,7 +100,7 @@ final class CachedSessionTests: XCTestCase {
         XCTAssertTrue(storage.dataDictionary.keys.isEmpty)
     }
     
-    func testSessionCleanupUsingPolicyIgnoringCache() throws {
+    func testSessionCleanupUsingPolicyUnavailableItems() throws {
         // given
         session = URLSessionMock(data: testData)
         cachedSession = CachedSession(cache: cache, session: session)
@@ -112,6 +112,6 @@ final class CachedSessionTests: XCTestCase {
         try cachedSession.cleanup(using: policy)
 
         // then
-        XCTAssertFalse(storage.dataDictionary.keys.isEmpty, "Cleanup policy max size greater than resource size")
+        XCTAssertFalse(storage.dataDictionary.keys.isEmpty)
     }
 }
