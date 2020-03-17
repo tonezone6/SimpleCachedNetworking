@@ -1,9 +1,9 @@
 # SimpleCachedNetworking
 
-In addition to SimpleNetworking, SimpleCachedNetworking helps you to cache loaded resources.  
+In addition to `SimpleNetworking`, `SimpleCachedNetworking` helps you to persist loaded resources.  
 
 ## Usage
-Just load your resource using URLSession  `cached` instance:
+Just load your resource using URLSession `cached` instance:
 
 ```swift
 var request: URLRequest {
@@ -27,7 +27,7 @@ To clean-up cache just
 try URLSession.cached.cleanup()
 ```
 
-or you can use a policy instead:
+or use use `MaxSizeCleanupPolicy` policy:
 
 ```swift
 let size = 50 * 1024 * 1024 // 50 MB
