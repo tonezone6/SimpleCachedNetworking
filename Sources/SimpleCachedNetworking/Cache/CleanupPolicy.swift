@@ -13,6 +13,10 @@ public struct CleanupPolicySize {
 public struct MaxSizeCleanupPolicy: CleanupPolicy {
     let size: Int64
     
+    public init(size: Int64) {
+        self.size = size
+    }
+    
     public func itemsToRemove(from items: Set<CacheItem>) -> Set<CacheItem> {
         var itemsToRemove = Set<CacheItem>()
         var cumulativeSize = 0
